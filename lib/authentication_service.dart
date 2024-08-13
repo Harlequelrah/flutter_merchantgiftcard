@@ -34,7 +34,26 @@ Future<void> login(String email, String password, BuildContext context) async {
           responseData['token'] != null &&
           responseData['token'] is String) {
         final String token = responseData['token'];
-        await _saveToken(token); // Sauvegarde du token dans SharedPreferences
+        final Map<String, String> claims = parseJwt(token);
+
+        final String role = claims['role'] ?? '';
+        final String isActive = claims['IsActive'] ?? '';
+
+        if (role != 'MERCHANT') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Vous n\'êtes pas autorisé à vous connecter à cette application.')),
+          );
+          return;
+        }
+
+        if (isActive.toLowerCase() == 'false') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Votre compte n\'est plus actif. Merci de contacter le support de GoChap.')),
+          );
+          return;
+        }
+
+        await _saveToken(token);
 
         Navigator.pushReplacement(
           context,
@@ -42,23 +61,25 @@ Future<void> login(String email, String password, BuildContext context) async {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Échec de la connexion. Token invalide.')),
+          const SnackBar(content: Text('Échec de la connexion. Token invalide.')),
         );
+
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Échec de la connexion. Vérifiez vos informations.')),
+        const SnackBar(content: Text('Échec de la connexion. Vérifiez vos informations.')),
       );
+
     }
   } catch (e) {
     print('Erreur: $e');
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Erreur de connexion. Veuillez réessayer.')),
     );
+
   }
 }
+
 
 Future<void> refreshToken(String refreshToken) async {
   final url = Uri.parse('http://10.0.2.2:5107/api/User/refresh-token');
@@ -173,3 +194,20 @@ Future<String?> getToken() async {
       MaterialPageRoute(builder: (context) => const LoginPage()),
     );
   }
+Map<String, String> parseJwt(String token) {
+  final parts = token.split('.');
+  if (parts.length != 3) {
+    throw Exception('JWT invalide');
+  }
+
+  final payload = parts[1];
+  final normalized = base64Url.normalize(payload);
+  final decodedBytes = base64Url.decode(normalized);
+  final Map<String, dynamic> decodedMap = jsonDecode(utf8.decode(decodedBytes));
+
+  return decodedMap.map((key, value) => MapEntry(key, value.toString()));
+}
+String? getClaimValue(String token, String key) {
+  final parsedToken = parseJwt(token);
+  return parsedToken[key];
+}
