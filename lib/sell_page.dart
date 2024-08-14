@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_merchantgiftcard/authentication_service.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'merchant_service.dart';
+import 'home.dart';
 
 class SellPage extends StatefulWidget {
   final String accessToken;
-  final String idUser;
+  final String idMerchant;
   final double montant;
 
   SellPage({
     required this.accessToken,
-    required this.idUser,
+    required this.idMerchant,
     required this.montant,
   });
 
@@ -64,7 +66,7 @@ class _SellPageState extends State<SellPage> {
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('QR Code Scanné: $result'),
+                        Text('QR Code Scanné avec succès'),
                         SizedBox(height: 10),
                         ElevatedButton(
                           onPressed: _processPayment,
@@ -94,17 +96,23 @@ class _SellPageState extends State<SellPage> {
   Future<void> _processPayment() async {
     if (result != null && result!.isNotEmpty) {
       try {
-        final String response = await MerchantService.ProcessPayement(
+        final bool response = await MerchantService.ProcessPayement(
           widget.accessToken,
-          widget.idUser,
+          widget.idMerchant,
           result!,
           widget.montant,
         );
-
-        // Affiche un message de succès ou fais quelque chose avec la réponse
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Paiement réussi: $response')),
+          SnackBar(content: Text('Paiement réussi:')),
         );
+        if (response) {
+          final id = getClaimValue(widget.accessToken, "nameid") ??"";
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage(idUser: id)),
+          );
+        }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Erreur lors du paiement: $e')),

@@ -2,6 +2,7 @@ import 'models.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
 const String baseUrl = 'http://192.168.0.113:5107/api';
 
 class MerchantService {
@@ -24,7 +25,8 @@ class MerchantService {
     }
   }
 
-  static Future<String> ProcessPayement(String accessToken, String id , String beneficiaryToken, double montant) async {
+  static Future<bool> ProcessPayement(String accessToken, String id,
+      String beneficiaryToken, double montant) async {
     final String url = '$baseUrl/Merchant/processpayement/bymerchant/$id';
     final response = await http.post(
       Uri.parse(url),
@@ -34,16 +36,24 @@ class MerchantService {
       },
       body: jsonEncode(<String, dynamic>{
         'token': beneficiaryToken,
-        'montant':montant,
+        'montant': montant,
       }),
     );
-    print(response.body);
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      return jsonResponse['token'];
+      return true;
     } else {
-      throw Exception('Failed to load QRCodeToken');
+
+
+      // Vérifiez si le corps de la réponse contient un message d'erreur
+      String errorMessage = 'Failed to process payment';
+      if (response.body.isNotEmpty) {
+        final Map<String, dynamic> errorResponse = json.decode(response.body);
+        if (errorResponse.containsKey('message')) {
+          errorMessage = errorResponse['message'];
+        }
+      }
+      throw Exception(errorMessage);
     }
   }
 

@@ -232,7 +232,7 @@ class HomePageState extends State<HomePage> {
                           MaterialPageRoute(
                             builder: (context) => SellPage(
                               accessToken: accessToken,
-                              idUser: idUser,
+                              idMerchant: merchant.idMerchant.toString(),
                               montant: montant,
                             ),
                           ),
