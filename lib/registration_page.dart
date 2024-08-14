@@ -8,7 +8,8 @@ class RegistrationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    final TextEditingController nomCompletController = TextEditingController();
+    final TextEditingController nomController = TextEditingController();
+    final TextEditingController prenomController = TextEditingController();
     final TextEditingController adresseController = TextEditingController();
     final TextEditingController telephoneController = TextEditingController();
 
@@ -57,11 +58,25 @@ class RegistrationPage extends StatelessWidget {
                   child: Column(
                     children: [
                       TextField(
-                        controller: nomCompletController,
+                        controller: nomController,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          labelText: 'Nom Complet',
+                          labelText: 'Nom',
+                          labelStyle: TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: prenomController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          labelText: 'Prenom',
                           labelStyle: TextStyle(color: Colors.grey),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -134,7 +149,8 @@ class RegistrationPage extends StatelessWidget {
                             await register(
                               emailController.text,
                               passwordController.text,
-                              nomCompletController.text,
+                              nomController.text,
+                              prenomController.text,
                               adresseController.text,
                               telephoneController.text,
                               context,

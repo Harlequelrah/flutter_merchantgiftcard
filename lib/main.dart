@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'registration_page.dart';
 import 'authentication_service.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance();
@@ -150,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           )),
                       const SizedBox(
-                        height: 40,
+                        height: 30,
                       ),
                       FadeInUp(
                           duration: const Duration(milliseconds: 1500),
@@ -159,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(color: Colors.grey),
                           )),
                       const SizedBox(
-                        height: 40,
+                        height: 30,
                       ),
                       FadeInUp(
                           duration: const Duration(milliseconds: 1600),
@@ -183,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           )),
                       const SizedBox(
-                        height: 40,
+                        height: 30,
                       ),
                       FadeInUp(
                           duration: const Duration(milliseconds: 1600),
@@ -203,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             child: const Center(
                               child: Text(
-                                "S'Inscrire",
+                                "Allez à la page d'Inscription",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
