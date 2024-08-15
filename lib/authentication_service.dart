@@ -29,14 +29,14 @@ Future<void> login(String email, String password, BuildContext context) async {
         'password': password,
       }),
     );
-          if (response.statusCode == 403) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text(
-                    'Votre accès a été refusé . Merci de contacter le support de GoChap.')),
-          );
-          return;
-        }
+    if (response.statusCode == 403) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'Votre accès a été refusé . Merci de contacter le support de GoChap.')),
+      );
+      return;
+    }
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -57,8 +57,6 @@ Future<void> login(String email, String password, BuildContext context) async {
           );
           return;
         }
-
-
 
         await _saveToken(token);
         Navigator.pushReplacement(
@@ -88,7 +86,20 @@ Future<void> login(String email, String password, BuildContext context) async {
   }
 }
 
-Future<void> refreshToken(String refreshToken) async {
+bool isTokenExpired(String token) {
+  final String? expirationClaim = getClaimValue(token, 'exp');
+  if (expirationClaim == null) {
+    throw Exception('Le token ne contient pas de claim "exp".');
+  }
+
+  final int expirationTimestamp = int.parse(expirationClaim);
+  final DateTime expirationDate =
+      DateTime.fromMillisecondsSinceEpoch(expirationTimestamp * 1000);
+
+  return DateTime.now().isAfter(expirationDate);
+}
+
+Future<void> refreshToken(String token) async {
   final url = Uri.parse('http://192.168.0.113:5107/api/User/refresh-token');
 
   try {
@@ -98,7 +109,7 @@ Future<void> refreshToken(String refreshToken) async {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'refreshToken': refreshToken,
+        'refreshToken': token,
       }),
     );
 
@@ -120,7 +131,7 @@ Future<void> _saveToken(String token) async {
   await prefs.setString('token', token);
 }
 
-Future<void> register(String email, String password, String nom,String prenom,
+Future<void> register(String email, String password, String nom, String prenom,
     String adresse, String telephone, BuildContext context) async {
   final url = Uri.parse('http://192.168.0.113:5107/api/User/register/merchant');
 
@@ -138,12 +149,12 @@ Future<void> register(String email, String password, String nom,String prenom,
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'email': email,
-        'password': password,
-        'nom': nom,
-        'prenom':prenom,
-        'telephone': telephone,
-        'adresse': adresse
+        'email': email.trim(),
+        'password': password.trim(),
+        'nom': nom.trim(),
+        'prenom': prenom.trim(),
+        'telephone': telephone.trim(),
+        'adresse': adresse.trim()
       }),
     );
     print('Response body: ${response.body}');
@@ -219,4 +230,13 @@ Map<String, String> parseJwt(String token) {
 String? getClaimValue(String token, String key) {
   final parsedToken = parseJwt(token);
   return parsedToken[key];
+}
+
+Future<void> loadTokenState() async {
+  final String? token = await getToken();
+  if (token != null) {
+    if (isTokenExpired(token)) {
+      await refreshToken(token);
+    }
+  }
 }
