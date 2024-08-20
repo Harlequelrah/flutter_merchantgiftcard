@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 export 'authentication_service.dart';
-
+import 'merchant_service.dart';
+import 'models.dart';
 import 'home.dart';
 import 'main.dart';
 
@@ -29,7 +30,7 @@ Future<void> login(String email, String password, BuildContext context) async {
         'password': password,
       }),
     );
-    if (response.statusCode == 403) {
+    if (response.statusCode == 403 || response.statusCode == 401) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text(
@@ -46,7 +47,7 @@ Future<void> login(String email, String password, BuildContext context) async {
           responseData['token'] is String) {
         final String token = responseData['token'];
         final Map<String, String> claims = parseJwt(token);
-        final String id = claims['nameid'] ?? '';
+        // final String id = claims['nameid'] ?? '';
         final String role = claims['role'] ?? '';
 
         if (role != 'MERCHANT') {
@@ -59,10 +60,7 @@ Future<void> login(String email, String password, BuildContext context) async {
         }
 
         await _saveToken(token);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage(idUser: id)),
-        );
+        await GetMerchantUser(context, token);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -82,6 +80,26 @@ Future<void> login(String email, String password, BuildContext context) async {
     print('Erreur: $e');
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Erreur de connexion. Veuillez réessayer.')),
+    );
+  }
+}
+Future<void> GetMerchantUser(
+    BuildContext context, String token) async {
+  try {
+    final id = getClaimValue(token, "nameid") ?? "";
+    final MerchantUser fetchedmerchant =
+        await MerchantService.fetchMerchantUser(token, id);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => HomePage(merchant: fetchedmerchant)),
+    );
+  } catch (e) {
+    print('Failed to load merchant $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text(
+              'Erreur lors du chargement de votre profil , Veuillez réessayer ultérieurement.')),
     );
   }
 }

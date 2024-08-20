@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_merchantgiftcard/authentication_service.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'merchant_service.dart';
-import 'home.dart';
 
 class SellPage extends StatefulWidget {
   final String accessToken;
@@ -106,12 +105,7 @@ class _SellPageState extends State<SellPage> {
           SnackBar(content: Text('Paiement réussi:')),
         );
         if (response) {
-          final id = getClaimValue(widget.accessToken, "nameid") ??"";
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage(idUser: id)),
-          );
+          await GetMerchantUser(context,widget.accessToken);
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

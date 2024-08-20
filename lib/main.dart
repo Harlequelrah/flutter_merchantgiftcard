@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'registration_page.dart';
 import 'authentication_service.dart';
 import 'home.dart';
+import 'models.dart';
+import 'merchant_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +33,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late MerchantUser merchant;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -44,18 +47,32 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _loadToken();
+    _loadTokenAndData();
   }
 
-  Future<void> _loadToken() async {
+  Future<void> _loadTokenAndData() async {
     await loadTokenState();
     final String? token = await getToken();
     if (token != null) {
       final String id = getClaimValue(token, "nameid") ?? "";
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(idUser: id)),
-      );
+      try {
+        final MerchantUser fetchedmerchant =
+            await MerchantService.fetchMerchantUser(token, id);
+        setState(() {
+          merchant = fetchedmerchant;
+        });
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage(merchant: merchant)),
+        );
+      } catch (e) {
+        print('Failed to load merchant $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text(
+                  "Erreur lors du chargement de votre profil ,Assurez vous d 'avoir une connexion internet active ou réessayer ultérieurement.")),
+        );
+      }
     }
   }
 

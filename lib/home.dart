@@ -1,55 +1,36 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'authentication_service.dart';
-import 'merchant_service.dart';
 import 'models.dart';
 import 'history_page.dart';
 import 'sell_page.dart';
 
 class HomePage extends StatefulWidget {
-  final String idUser;
-  const HomePage({super.key, required this.idUser});
+  final MerchantUser merchant;
+  const HomePage({super.key, required this.merchant});
 
   @override
   HomePageState createState() => HomePageState();
 }
 
 class HomePageState extends State<HomePage> {
-  late MerchantUser merchant = MerchantUser(
-    idMerchant: 0,
-    nomComplet: 'Username',
-    email: 'username@example.com',
-    solde: 'XOF 0.00',
-  );
+  late MerchantUser merchant;
   late String accessToken;
   late String idUser;
 
   @override
   void initState() {
     super.initState();
-    idUser = widget.idUser;
-    _loadTokenAndData();
+    merchant = widget.merchant;
+    _loadToken();
   }
 
-  Future<void> _fetchData() async {
-    try {
-      final MerchantUser fetchedMerchant =
-          await MerchantService.fetchMerchantUser(accessToken, idUser);
-      setState(() {
-        merchant = fetchedMerchant;
-      });
-    } catch (e) {
-      print('Failed to load merchant $e');
-    }
-  }
-
-  Future<void> _loadTokenAndData() async {
+  Future<void> _loadToken() async {
     final String? token = await getToken();
     if (token != null) {
       setState(() {
         accessToken = token;
       });
-      await _fetchData();
     } else {
       Navigator.pushReplacement(
         context,
@@ -216,7 +197,8 @@ class HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HistoryPage(idMerchant: merchant.idMerchant.toString()),
+                          builder: (context) => HistoryPage(
+                              idMerchant: merchant.idMerchant.toString()),
                         ),
                       );
                     },
