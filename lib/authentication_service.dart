@@ -30,11 +30,19 @@ Future<void> login(String email, String password, BuildContext context) async {
         'password': password,
       }),
     );
-    if (response.statusCode == 403 || response.statusCode == 401) {
+    if (response.statusCode == 403) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text(
                 'Votre accès a été refusé . Merci de contacter le support de GoChap.')),
+      );
+      return;
+    }
+    if (response.statusCode == 401) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'La connexion a echoué ;Veuillez verifier vos identifiants.')),
       );
       return;
     }
@@ -83,8 +91,8 @@ Future<void> login(String email, String password, BuildContext context) async {
     );
   }
 }
-Future<void> GetMerchantUser(
-    BuildContext context, String token) async {
+
+Future<void> GetMerchantUser(BuildContext context, String token) async {
   try {
     final id = getClaimValue(token, "nameid") ?? "";
     final MerchantUser fetchedmerchant =
