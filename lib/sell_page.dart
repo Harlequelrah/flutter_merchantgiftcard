@@ -102,7 +102,7 @@ class _SellPageState extends State<SellPage> {
           widget.montant,
         );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Paiement réussi:')),
+          SnackBar(content: Text('Paiement réussi')),
         );
         if (response) {
           await GetMerchantUser(context,widget.accessToken);

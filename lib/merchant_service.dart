@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 
-const String baseUrl = 'http://192.168.0.113:5107/api';
+const String baseUrl = 'http://192.168.0.102:5107/api';
 
 class MerchantService {
   static Future<MerchantUser> fetchMerchantUser(
