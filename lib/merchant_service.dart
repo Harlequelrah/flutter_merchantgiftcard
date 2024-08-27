@@ -2,8 +2,7 @@ import 'models.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
-const String baseUrl = 'http://192.168.0.102:5107/api';
+const String baseUrl = 'http://192.168.137.160:5107/api';
 
 class MerchantService {
   static Future<MerchantUser> fetchMerchantUser(
@@ -43,8 +42,6 @@ class MerchantService {
     if (response.statusCode == 200) {
       return true;
     } else {
-
-
       // Vérifiez si le corps de la réponse contient un message d'erreur
       String errorMessage = 'Failed to process payment';
       if (response.body.isNotEmpty) {

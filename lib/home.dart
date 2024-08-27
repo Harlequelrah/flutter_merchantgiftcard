@@ -4,7 +4,8 @@ import 'authentication_service.dart';
 import 'models.dart';
 import 'history_page.dart';
 import 'sell_page.dart';
-
+import 'signalr_service.dart';
+import 'notification_service.dart';
 class HomePage extends StatefulWidget {
   final MerchantUser merchant;
   const HomePage({super.key, required this.merchant});
@@ -16,13 +17,15 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   late MerchantUser merchant;
   late String accessToken;
-  late String idUser;
+  late NotificationService notificationService;
 
   @override
   void initState() {
     super.initState();
     merchant = widget.merchant;
     _loadToken();
+    notificationService = NotificationService();
+    notificationService.init();
   }
 
   Future<void> _loadToken() async {
@@ -31,6 +34,7 @@ class HomePageState extends State<HomePage> {
       setState(() {
         accessToken = token;
       });
+      await connectToSignalR(notificationService);
     } else {
       Navigator.pushReplacement(
         context,
