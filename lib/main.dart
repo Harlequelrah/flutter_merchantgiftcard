@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,9 +8,11 @@ import 'authentication_service.dart';
 import 'home.dart';
 import 'models.dart';
 import 'merchant_service.dart';
+import 'signalr_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides();
   await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
