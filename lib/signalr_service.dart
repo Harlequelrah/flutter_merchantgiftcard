@@ -13,7 +13,7 @@ Future<HubConnection> connectToSignalR(NotificationService notificationService) 
 
   final connection = HubConnectionBuilder()
       .withUrl(
-        'http://10.0.2.2:5107/notificationHub',
+        'http://192.168.137.160:5107/notificationHub',
         HttpConnectionOptions(
           client: IOClient(
               HttpClient()..badCertificateCallback = (x, y, z) => true),
@@ -39,12 +39,16 @@ Future<HubConnection> connectToSignalR(NotificationService notificationService) 
     print("SignalR connection started");
 
     connection.on('ReceiveMessage', (message) {
+          String messageR = "";
+      if (message != null && message.isNotEmpty) {
+        messageR = message[0];
+      }
       print("Message reçu : ${message.toString()}");
 
       notificationService.showNotification(
         0,
         "Nouvelle Notification",
-        message.toString(),
+        messageR.toString(),
       );
     });
 
