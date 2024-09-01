@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/io_client.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'notification_service.dart';
@@ -15,7 +16,7 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 
-Future<HubConnection> connectToSignalR(
+Future<HubConnection> connectToSignalR(BuildContext context,
     NotificationService notificationService) async {
   final String? token = await getToken();
 
@@ -26,7 +27,7 @@ Future<HubConnection> connectToSignalR(
 
   final connection = HubConnectionBuilder()
       .withUrl(
-        'https://192.168.0.113:7168/notificationHub',
+        'https://10.0.2.2:7168/notificationHub',
         HttpConnectionOptions(
           client: IOClient(),
           accessTokenFactory: () async => token,
@@ -50,7 +51,7 @@ Future<HubConnection> connectToSignalR(
     await connection.start();
     print("SignalR connection started");
 
-    connection.on('ReceiveMessage', (message) {
+    connection.on('ReceiveMessage', (message) async {
       String messageR = "";
       if (message != null && message.isNotEmpty) {
         messageR = message[0];
@@ -62,7 +63,9 @@ Future<HubConnection> connectToSignalR(
         "Nouvelle Notification",
         messageR.toString(),
       );
+      await GetMerchantUser(context,token);
     });
+
   } catch (e) {
     print("Error starting SignalR connection: $e");
   }
