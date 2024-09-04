@@ -1,20 +1,41 @@
 import 'package:flutter/material.dart';
 import 'authentication_service.dart';
 
-class RegistrationPage extends StatelessWidget {
+class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-    final TextEditingController nomController = TextEditingController();
-    final TextEditingController prenomController = TextEditingController();
-    final TextEditingController adresseController = TextEditingController();
-    final TextEditingController telephoneController = TextEditingController();
+  _RegistrationPageState createState() => _RegistrationPageState();
+}
 
+class _RegistrationPageState extends State<RegistrationPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController nomController = TextEditingController();
+  final TextEditingController prenomController = TextEditingController();
+  final TextEditingController adresseController = TextEditingController();
+  final TextEditingController telephoneController = TextEditingController();
+  bool obscureText = false;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    nomController.dispose();
+    prenomController.dispose();
+    adresseController.dispose();
+    telephoneController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // Ajoutez cette ligne
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.orange[900],
         title: const Text('Retour', style: TextStyle(color: Colors.white)),
@@ -63,7 +84,7 @@ class RegistrationPage extends StatelessWidget {
                       filled: true,
                       fillColor: Colors.white,
                       labelText: 'Nom',
-                      labelStyle: TextStyle(color: Colors.grey),
+                      labelStyle: const TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
@@ -77,7 +98,7 @@ class RegistrationPage extends StatelessWidget {
                       filled: true,
                       fillColor: Colors.white,
                       labelText: 'Prenom',
-                      labelStyle: TextStyle(color: Colors.grey),
+                      labelStyle: const TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
@@ -91,7 +112,7 @@ class RegistrationPage extends StatelessWidget {
                       filled: true,
                       fillColor: Colors.white,
                       labelText: 'Email',
-                      labelStyle: TextStyle(color: Colors.grey),
+                      labelStyle: const TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
@@ -103,15 +124,24 @@ class RegistrationPage extends StatelessWidget {
                     controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'Mot de passe',
-                      labelStyle: TextStyle(color: Colors.grey),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'Mot de passe',
+                        labelStyle: const TextStyle(color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                          onPressed: () {
+                            setState(() {
+                              obscureText = !obscureText;
+                            });
+                          },
+                        )),
                   ),
                   const SizedBox(height: 10),
                   TextField(
@@ -120,7 +150,7 @@ class RegistrationPage extends StatelessWidget {
                       filled: true,
                       fillColor: Colors.white,
                       labelText: 'Téléphone',
-                      labelStyle: TextStyle(color: Colors.grey),
+                      labelStyle: const TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
@@ -134,7 +164,7 @@ class RegistrationPage extends StatelessWidget {
                       filled: true,
                       fillColor: Colors.white,
                       labelText: 'Adresse',
-                      labelStyle: TextStyle(color: Colors.grey),
+                      labelStyle: const TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
@@ -157,8 +187,7 @@ class RegistrationPage extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Colors.orange[900], // Couleur du bouton
+                        backgroundColor: Colors.orange[900],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),

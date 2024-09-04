@@ -15,10 +15,16 @@ Future<void> login(String email, String password, BuildContext context) async {
     );
     return;
   }
+    if (!isValidEmail(email)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('L\'email est invalide.')),
+    );
+    return;
+  }
   email = email.trim();
   password = password.trim();
 
-  final url = Uri.parse('https://192.168.43.49:7168/api/User/login');
+  final url = Uri.parse('https://10.0.2.2:7168/api/User/login');
   try {
     final response = await http.post(
       url,
@@ -111,7 +117,12 @@ Future<void> GetMerchantUser(BuildContext context, String token) async {
     );
   }
 }
-
+bool isValidEmail(String email) {
+  final emailRegex = RegExp(
+    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+  );
+  return emailRegex.hasMatch(email);
+}
 bool isTokenExpired(String token) {
   final String? expirationClaim = getClaimValue(token, 'exp');
   if (expirationClaim == null) {
@@ -126,7 +137,7 @@ bool isTokenExpired(String token) {
 }
 
 Future<void> refreshToken(String token) async {
-  final url = Uri.parse('https://192.168.43.49:7168/api/User/refresh-token');
+  final url = Uri.parse('https://10.0.2.2:7168/api/User/refresh-token');
 
   try {
     final response = await http.post(
@@ -143,7 +154,7 @@ Future<void> refreshToken(String token) async {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       final String newToken = responseData['token'];
       await _saveToken(
-          newToken); // Mettre à jour le token dans SharedPreferences
+          newToken);
     } else {
       print('Failed to refresh token.');
     }
@@ -159,7 +170,7 @@ Future<void> _saveToken(String token) async {
 
 Future<void> register(String email, String password, String nom, String prenom,
     String adresse, String telephone, BuildContext context) async {
-  final url = Uri.parse('https://192.168.43.49:7168/api/User/register/merchant');
+  final url = Uri.parse('https://10.0.2.2:7168/api/User/register/merchant');
 
   if (email.isEmpty || password.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -192,7 +203,7 @@ Future<void> register(String email, String password, String nom, String prenom,
           responseData['token'] != null &&
           responseData['token'] is String) {
         final String token = responseData['token'];
-        await _saveToken(token); // Sauvegarde du token dans SharedPreferences
+        await _saveToken(token);
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Inscription réussie')),

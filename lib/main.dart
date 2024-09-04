@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(), // Ajout de la page d'accueil
+      home: LoginPage(),
     );
   }
 }
@@ -40,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   late MerchantUser merchant;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true;
 
   @override
   void dispose() {
@@ -178,12 +179,22 @@ class _LoginPageState extends State<LoginPage> {
                                               color: Colors.grey.shade200))),
                                   child: TextField(
                                     controller: passwordController,
-                                    obscureText: true,
+                                    obscureText: _obscureText,
                                     decoration: InputDecoration(
                                         hintText: "Mot de Passe",
                                         hintStyle:
                                             TextStyle(color: Colors.grey),
-                                        border: InputBorder.none),
+                                        border: InputBorder.none,
+                                        suffixIcon: IconButton(
+                                          icon: Icon(_obscureText
+                                              ? Icons.visibility_off
+                                              : Icons.visibility),
+                                          onPressed: () {
+                                            setState(() {
+                                              _obscureText = !_obscureText;
+                                            });
+                                          },
+                                        )),
                                   ),
                                 ),
                               ],
