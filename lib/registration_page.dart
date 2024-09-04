@@ -15,7 +15,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController prenomController = TextEditingController();
   final TextEditingController adresseController = TextEditingController();
   final TextEditingController telephoneController = TextEditingController();
-  bool obscureText = false;
+  bool _obscureText = false;
   @override
   void initState() {
     super.initState();
@@ -122,7 +122,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   const SizedBox(height: 10),
                   TextField(
                     controller: passwordController,
-                    obscureText: true,
+                    obscureText: _obscureText,
                     decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
@@ -133,12 +133,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           borderSide: BorderSide.none,
                         ),
                         suffixIcon: IconButton(
-                          icon: Icon(obscureText
+                          icon: Icon(_obscureText
                               ? Icons.visibility_off
                               : Icons.visibility),
                           onPressed: () {
                             setState(() {
-                              obscureText = !obscureText;
+                              _obscureText = !_obscureText;
                             });
                           },
                         )),

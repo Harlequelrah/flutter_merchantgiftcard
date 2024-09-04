@@ -15,7 +15,7 @@ Future<void> login(String email, String password, BuildContext context) async {
     );
     return;
   }
-    if (!isValidEmail(email)) {
+  if (!isValidEmail(email)) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('L\'email est invalide.')),
     );
@@ -24,7 +24,7 @@ Future<void> login(String email, String password, BuildContext context) async {
   email = email.trim();
   password = password.trim();
 
-  final url = Uri.parse('https://10.0.2.2:7168/api/User/login');
+  final url = Uri.parse('https://192.168.0.113:7168/api/User/login');
   try {
     final response = await http.post(
       url,
@@ -86,7 +86,7 @@ Future<void> login(String email, String password, BuildContext context) async {
         const SnackBar(
             content: Text('Échec de la connexion. Vérifiez vos informations.')),
       );
-      print('email : ${email},password : ${password}');
+      print('email : $email,password : $password');
       print('Response body: ${response.body}');
       print('Response code: ${response.statusCode}');
     }
@@ -117,12 +117,17 @@ Future<void> GetMerchantUser(BuildContext context, String token) async {
     );
   }
 }
+
 bool isValidEmail(String email) {
-  final emailRegex = RegExp(
-    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+  final RegExp emailRegex = RegExp(
+    r'^([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$',
+    caseSensitive: false,
+    multiLine: false,
   );
-  return emailRegex.hasMatch(email);
+  return emailRegex.hasMatch(email.trim());
 }
+
+
 bool isTokenExpired(String token) {
   final String? expirationClaim = getClaimValue(token, 'exp');
   if (expirationClaim == null) {
@@ -137,7 +142,7 @@ bool isTokenExpired(String token) {
 }
 
 Future<void> refreshToken(String token) async {
-  final url = Uri.parse('https://10.0.2.2:7168/api/User/refresh-token');
+  final url = Uri.parse('https://192.168.0.113:7168/api/User/refresh-token');
 
   try {
     final response = await http.post(
@@ -153,8 +158,7 @@ Future<void> refreshToken(String token) async {
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       final String newToken = responseData['token'];
-      await _saveToken(
-          newToken);
+      await _saveToken(newToken);
     } else {
       print('Failed to refresh token.');
     }
@@ -170,11 +174,19 @@ Future<void> _saveToken(String token) async {
 
 Future<void> register(String email, String password, String nom, String prenom,
     String adresse, String telephone, BuildContext context) async {
-  final url = Uri.parse('https://10.0.2.2:7168/api/User/register/merchant');
+  final url =
+      Uri.parse('https://192.168.0.113:7168/api/User/register/merchant');
 
-  if (email.isEmpty || password.isEmpty) {
+  if (email.isEmpty || password.isEmpty || nom.isEmpty || prenom.isEmpty || adresse.isEmpty|| telephone.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Veuillez remplir tous les champs.')),
+    );
+    return;
+  }
+  if (!isValidEmail(email)) {
+    print(email);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('L\'email est invalide.')),
     );
     return;
   }
