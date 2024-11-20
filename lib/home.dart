@@ -49,21 +49,21 @@ class HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Entrer le montant'),
+          title: const Text('Entrer le montant'),
           content: TextField(
             controller: montantController,
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(hintText: 'Montant'),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: const InputDecoration(hintText: 'Montant'),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Annuler'),
+              child: const Text('Annuler'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 final montant = double.tryParse(montantController.text);
                 Navigator.of(context).pop(montant);
@@ -107,7 +107,7 @@ class HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -129,16 +129,16 @@ class HomePageState extends State<HomePage> {
                       children: [
                         Text(
                           merchant.nomComplet,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Text(
                           merchant.email,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white70,
                           ),
@@ -150,7 +150,7 @@ class HomePageState extends State<HomePage> {
                     height: 50,
                     width: 1,
                     color: Colors.white54,
-                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
                   ),
                   Expanded(
                     child: Column(
@@ -158,14 +158,14 @@ class HomePageState extends State<HomePage> {
                       children: [
                         Text(
                           merchant.solde,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(height: 5),
-                        Row(
+                        const SizedBox(height: 5),
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Icon(Icons.account_balance_wallet,
@@ -187,7 +187,7 @@ class HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
@@ -243,7 +243,7 @@ class HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: Colors.grey[200],
           borderRadius: BorderRadius.circular(10),
@@ -252,10 +252,10 @@ class HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 40, color: Colors.orange[900]),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),

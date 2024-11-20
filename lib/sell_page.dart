@@ -8,7 +8,7 @@ class SellPage extends StatefulWidget {
   final String idMerchant;
   final double montant;
 
-  SellPage({
+  const SellPage({super.key,
     required this.accessToken,
     required this.idMerchant,
     required this.montant,
@@ -34,9 +34,9 @@ class _SellPageState extends State<SellPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Vente'),
+        title: const Text('Vente'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -65,15 +65,15 @@ class _SellPageState extends State<SellPage> {
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('QR Code Scanné avec succès'),
-                        SizedBox(height: 10),
+                        const Text('QR Code Scanné avec succès'),
+                        const SizedBox(height: 10),
                         ElevatedButton(
                           onPressed: _processPayment,
-                          child: Text('Valider le paiement'),
+                          child: const Text('Valider le paiement'),
                         ),
                       ],
                     )
-                  : Text('Scanner un code QR'),
+                  : const Text('Scanner un code QR'),
             ),
           ),
         ],
@@ -102,7 +102,7 @@ class _SellPageState extends State<SellPage> {
           widget.montant,
         );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Paiement réussi')),
+          const SnackBar(content: Text('Paiement réussi')),
         );
         if (response) {
           await GetMerchantUser(context,widget.accessToken);
@@ -114,7 +114,7 @@ class _SellPageState extends State<SellPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Aucun QR Code scanné')),
+        const SnackBar(content: Text('Aucun QR Code scanné')),
       );
     }
   }

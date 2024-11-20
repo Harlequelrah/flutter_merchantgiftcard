@@ -27,7 +27,7 @@ Future<HubConnection> connectToSignalR(BuildContext context,
 
   final connection = HubConnectionBuilder()
       .withUrl(
-        'https://192.168.43.49:7168/notificationHub',
+        'https://53sssvqg-7168.uks1.devtunnels.ms/notificationHub',
         HttpConnectionOptions(
           client: IOClient(),
           accessTokenFactory: () async => token,

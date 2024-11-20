@@ -24,7 +24,7 @@ Future<void> login(String email, String password, BuildContext context) async {
   email = email.trim();
   password = password.trim();
 
-  final url = Uri.parse('https://192.168.43.49:7168/api/User/login');
+  final url = Uri.parse('https://53sssvqg-7168.uks1.devtunnels.ms/api/User/login');
   try {
     final response = await http.post(
       url,
@@ -142,7 +142,7 @@ bool isTokenExpired(String token) {
 }
 
 Future<void> refreshToken(String token) async {
-  final url = Uri.parse('https://192.168.43.49:7168/api/User/refresh-token');
+  final url = Uri.parse('https://53sssvqg-7168.uks1.devtunnels.ms/api/User/refresh-token');
 
   try {
     final response = await http.post(
@@ -175,7 +175,7 @@ Future<void> _saveToken(String token) async {
 Future<void> register(String email, String password, String nom, String prenom,
     String adresse, String telephone, BuildContext context) async {
   final url =
-      Uri.parse('https://192.168.43.49:7168/api/User/register/merchant');
+      Uri.parse('https://53sssvqg-7168.uks1.devtunnels.ms/api/User/register/merchant');
 
   if (email.isEmpty || password.isEmpty || nom.isEmpty || prenom.isEmpty || adresse.isEmpty|| telephone.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(

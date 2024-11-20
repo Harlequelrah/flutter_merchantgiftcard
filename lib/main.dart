@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                                               color: Colors.grey.shade200))),
                                   child: TextField(
                                     controller: emailController,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                         hintText: "Email",
                                         hintStyle:
                                             TextStyle(color: Colors.grey),
@@ -183,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                                     decoration: InputDecoration(
                                         hintText: "Mot de Passe",
                                         hintStyle:
-                                            TextStyle(color: Colors.grey),
+                                            const TextStyle(color: Colors.grey),
                                         border: InputBorder.none,
                                         suffixIcon: IconButton(
                                           icon: Icon(_obscureText

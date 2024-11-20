@@ -6,7 +6,7 @@ import 'main.dart';
 
 class HistoryPage extends StatefulWidget {
   final String idMerchant;
-  const HistoryPage({Key? key, required this.idMerchant}) : super(key: key);
+  const HistoryPage({super.key, required this.idMerchant});
 
   @override
   _HistoryPageState createState() => _HistoryPageState();
@@ -68,7 +68,7 @@ class _HistoryPageState extends State<HistoryPage> {
         centerTitle: true,
       ),
       body: histories.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               padding: const EdgeInsets.all(16.0),
               itemCount: histories.length,
@@ -93,24 +93,24 @@ class _HistoryPageState extends State<HistoryPage> {
                     children: [
                       Text(
                         history.action,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         'Montant: ${history.montant} XOF',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white70,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         'Date: ${history.date}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           color: Colors.white60,
                         ),
